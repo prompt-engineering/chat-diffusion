@@ -5,6 +5,8 @@
 
 [English](./README.md) | 简体中文
 
+演示：https://chat.fluoritestudio.com
+
 ## 目前仅支持客户端（浏览器）访问 OpenAI，服务器端调用正在开发中
 
 ## 本地搭建
