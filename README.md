@@ -1,4 +1,4 @@
-# ChatDiffusion - An ChatGPT web UI that integrates with variety of online Stable Diffusion services
+# ChatDiffusion - A ChatGPT web UI that integrates with variety of online Stable Diffusion services
 
 [![ci](https://github.com/prompt-engineering/chat-diffusion/actions/workflows/ci.yml/badge.svg)](https://github.com/prompt-engineering/chat-diffusion/actions/workflows/ci.yml)
 ![GitHub](https://img.shields.io/github/license/prompt-engineering/chat-diffusion)
@@ -12,7 +12,7 @@ Join us:
 
 [![Chat Server](https://img.shields.io/badge/chat-discord-7289da.svg)](https://discord.gg/FSWXq4DmEj)
 
-## Only support client-side (browser) call to OpenAI at this moment
+## Only support client-side (browser) call to OpenAI at this moment. Server-side WIP.
 
 ## Local Usage
 
