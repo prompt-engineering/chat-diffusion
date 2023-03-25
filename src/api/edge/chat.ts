@@ -24,7 +24,6 @@ export function getChatsByConversationId(
       e.role != "system" &&
       (e.role != "image" || withExtra)
   );
-  console.log(_filtered);
   if (withExtra) return _filtered;
   return [
     {
