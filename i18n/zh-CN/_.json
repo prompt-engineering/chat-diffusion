@@ -1,0 +1,14 @@
+{
+  "select_api_type": "请选择你将如何访问 ChatGPT：",
+  "select_api_type_note": "这个应用目前仅支持客户端模式，请确保你可以连接 OpenAI 服务器。在未经 OpenAI 许可的区域使用可能会造成封号。",
+  "client": "客户端模式",
+  "server": "服务器模式",
+  "openai_api_key": "使用你的 OpenAI API key：",
+  "huggingface_access_token": "使用你的 Hugging Face Access Token:",
+  "sign_up": "注册",
+  "create_new": "创建一个",
+  "copy_paste": "输入",
+  "go": "开始",
+  "enter_openai_api_key": "请输入 OpenAI API key",
+  "enter_huggingface_access_token": "请输入 Hugging Face Access Token"
+}

@@ -1,0 +1,14 @@
+{
+  "select_api_type": "Please select how would you like to access ChatGPT:",
+  "select_api_type_note": "This application currently only support calling OpenAI directly from your browser.\nPlease make sure you can access OpenAI server.\nOpenAI may block users accessing outside of allowed areas.",
+  "client": "Client-side",
+  "server": "Server-side",
+  "openai_api_key": "Use your OpenAI API key:",
+  "huggingface_access_token": "Use your Hugging Face Access Token:",
+  "sign_up": "Sign up for the",
+  "create_new": "Create a new",
+  "copy_paste": "Copy and paste",
+  "go": "Go",
+  "enter_openai_api_key": "Please enter your OpenAI API key.",
+  "enter_huggingface_access_token": "Please enter your Hugging Face access token"
+}
