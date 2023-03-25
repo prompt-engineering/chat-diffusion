@@ -6,7 +6,7 @@
 
 English | [简体中文](./README.zh-CN.md)
 
-Online Demo:
+Online Demo: [https://chat.fluoritestudio.com](https://chat.fluoritestudio.com)
 
 Join us:
 
