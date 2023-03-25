@@ -6,6 +6,8 @@
 
 English | [简体中文](./README.zh-CN.md)
 
+![Screenshot](https://raw.githubusercontent.com/tianweiliu/.github/main/chatdiffusion.png)
+
 Online Demo: [https://chat.fluoritestudio.com](https://chat.fluoritestudio.com)
 
 Join us:
