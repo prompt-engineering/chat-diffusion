@@ -17,10 +17,10 @@ Join us:
 ## Only support client-side (browser) call to OpenAI at this moment. Server-side WIP.
 
 ## Supported online services:
-- [x] Hugging Face (Inference API)[https://huggingface.co/inference-api] for Text to Image
-  - [x] Using (prompthero/openjourney)[https://huggingface.co/prompthero/openjourney] as default Stable Diffusion model, you can ask ChatGPT to change the "model" value in JSON to any model hosted on Hugging Face that has public inference API enabled.
+- [x] Hugging Face [Inference API](https://huggingface.co/inference-api) for Text to Image
+  - [x] Using [prompthero/openjourney](https://huggingface.co/prompthero/openjourney) as default Stable Diffusion model, you can ask ChatGPT to change the "model" value in JSON to any model hosted on Hugging Face that has public inference API enabled.
 - [ ] Hugging Face Space integration for Image to Text
-  - [ ] (DeepDanbooru)[https://huggingface.co/spaces/hysts/DeepDanbooru] (WIP)
+  - [ ] [DeepDanbooru](https://huggingface.co/spaces/hysts/DeepDanbooru) (WIP)
 
 ## Local Usage
 
