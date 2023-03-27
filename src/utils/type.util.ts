@@ -73,3 +73,8 @@ export type ResponseDeleteAllConversation = {
   message?: string;
   error?: string;
 };
+
+export type DeepDanbooruTag = {
+  label: string;
+  confidence: number;
+};

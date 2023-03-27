@@ -10,5 +10,6 @@
   "copy_paste": "Copy and paste",
   "go": "Go",
   "enter_openai_api_key": "Please enter your OpenAI API key.",
-  "enter_huggingface_access_token": "Please enter your Hugging Face access token"
+  "enter_huggingface_access_token": "Please enter your Hugging Face access token",
+  "select_all": "Select all"
 }

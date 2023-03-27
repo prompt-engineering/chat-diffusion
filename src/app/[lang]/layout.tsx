@@ -40,7 +40,7 @@ export default async function RootLayout({
             <NavBar locale={lang} />
           </div>
           <Container
-            marginTop="60px"
+            marginTop="72px"
             maxW="8xl"
             p={{ md: "2rem", base: "1rem" }}
           >

@@ -22,13 +22,13 @@ export function getChatsByConversationId(
     (e) =>
       e.conversation_id == conversationId &&
       e.role != "system" &&
-      (e.role != "image" || withExtra)
+      (e.role == "user" || e.role == "assistant" || withExtra)
   );
   if (withExtra) return _filtered;
   return [
     {
       name: undefined,
-      content: `Whever I ask to draw an image, respond with the following JSON: {"model":"${HUGGINGFACE_DEFAULT_STABLE_DIFFUSION_MODEL}","prompt":string,"negative_prompt":string}, and fill in prompt with very detailed tags used in Stable Diffusion, and fill in negative prompt with common negative tags used in Stable Diffusion, and don't use any language other than English.`,
+      content: `Whever I ask to generate an image, respond with the following JSON: {"model":"${HUGGINGFACE_DEFAULT_STABLE_DIFFUSION_MODEL}","prompt":string,"negative_prompt":string}, and fill in prompt with very detailed tags used in Stable Diffusion, and fill in negative prompt with common negative tags used in Stable Diffusion, and don't use any language other than English.`,
       id: 0,
       role: "system",
       conversation_id: conversationId,
@@ -62,7 +62,7 @@ export function saveChat(
   };
   _chats.push(_chat);
   _chatRepo.set(_chats);
-  return _chat;
+  return [_chat];
 }
 
 async function taskDispatcher(conversationId: number, _message: string) {
@@ -90,7 +90,8 @@ async function taskDispatcher(conversationId: number, _message: string) {
             _token,
             json.model,
             json.prompt,
-            json.negative_prompt
+            json.negative_prompt,
+            true
           );
         }
         if (_response.status == 200) {
@@ -156,8 +157,9 @@ export async function sendMessage(
     }
     saveChat(conversationId, _message);
     return [
-      saveChat(conversationId, choices[0].message),
-      await taskDispatcher(conversationId, choices[0].message.content),
+      ...saveChat(conversationId, choices[0].message),
+      ...((await taskDispatcher(conversationId, choices[0].message.content)) ??
+        []),
     ] as ResponseSend;
   } catch (e) {
     console.error(e);

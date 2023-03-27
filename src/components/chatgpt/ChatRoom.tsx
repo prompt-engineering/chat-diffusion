@@ -6,9 +6,22 @@ import LogoutIcon from "@/assets/icons/logout.svg";
 import Image from "next/image";
 import content from "@/assets/images/content.png";
 import send from "@/assets/icons/send.svg?url";
-import React, { Dispatch, SetStateAction, useEffect, useState } from "react";
+import image_polaroid from "@/assets/icons/image-polaroid.svg?url";
+import React, {
+  ChangeEventHandler,
+  createRef,
+  Dispatch,
+  DragEventHandler,
+  MouseEventHandler,
+  SetStateAction,
+  useEffect,
+  useState,
+} from "react";
 import styled from "@emotion/styled";
-import type { ResponseGetConversations } from "@/utils/type.util";
+import type {
+  DeepDanbooruTag,
+  ResponseGetConversations,
+} from "@/utils/type.util";
 import { ResponseGetChats, ResponseSend } from "@/utils/type.util";
 import { BeatLoader } from "react-spinners";
 import { useDebouncedCallback } from "use-debounce";
@@ -19,13 +32,15 @@ import * as UserAPI from "@/api/user";
 import SimpleMarkdown from "@/components/markdown/SimpleMarkdown";
 import { isClientSideOpenAI } from "@/api/edge/user";
 import * as EdgeChatAPI from "@/api/edge/chat";
+import { getTags } from "@/utils/huggingface.space.util";
+import { DeepDanbooru } from "../DeepDanbooru";
 
 const ChatInput = styled("input")`
   background: #ffffff;
   border-radius: 8px;
   border: none;
   padding: 0.5rem 1rem;
-  width: 768px;
+  width: 100%;
   height: 48px;
   font-size: 1rem;
   font-weight: 500;
@@ -44,10 +59,10 @@ const ChatInput = styled("input")`
 const ChatInputWrapper = styled("div")`
   position: absolute;
   bottom: 8px;
-  width: 768px;
   height: 48px;
   background-color: #fff;
   border-radius: 8px;
+  max-width: 90%;
 `;
 const ChatsWrapper = styled("div")`
   // good looking scrollbar
@@ -67,14 +82,28 @@ const ChatsWrapper = styled("div")`
     background: #555;
   }
 `;
-const ChatSendButton = styled("button")`
+const ButtonWrapper = styled("div")`
   position: absolute;
   top: 0;
   bottom: 0;
   right: 8px;
+`;
+const ChatSendButton = styled("button")`
   width: 48px;
   height: 48px;
   background-image: url(${send});
+  background-size: 24px;
+  background-position: center;
+  background-repeat: no-repeat;
+  cursor: pointer;
+  border: none;
+  outline: none;
+`;
+
+const UploadFileButton = styled("button")`
+  width: 48px;
+  height: 48px;
+  background-image: url(${image_polaroid});
   background-size: 24px;
   background-position: center;
   background-repeat: no-repeat;
@@ -106,6 +135,9 @@ export const ChatRoom = ({
   // editing conversation name
   const [editing, setEditing] = useState<number | null>(null);
   const [editingName, setEditingName] = useState<string>("");
+  const [file, setFile] = useState(new Blob());
+  const fileInputRef = createRef<HTMLInputElement>();
+  const [clearTagSelected, setClearTagSelected] = useState(0);
 
   // get conversations
   useEffect(() => {
@@ -132,6 +164,7 @@ export const ChatRoom = ({
   const onEnterForSendMessage: React.KeyboardEventHandler<HTMLInputElement> = (
     event
   ) => {
+    setClearTagSelected(clearTagSelected + 1);
     if (event.code === "Enter" || event.code === "NumpadEnter") {
       event.preventDefault();
 
@@ -236,6 +269,7 @@ export const ChatRoom = ({
   let codeMark = "";
   async function sendMessage(prompt?: string) {
     const _message = message.length ? message : prompt;
+    console.log(_message);
     if (!_message || _message.length === 0) {
       alert("Please enter your message first.");
       return;
@@ -341,8 +375,85 @@ export const ChatRoom = ({
     setIsLoggedIn(false);
   }
 
+  const handleImageFileUpload: ChangeEventHandler<HTMLInputElement> = async (
+    e
+  ) => {
+    if (!e.target.files?.length) return;
+    if (!currentConversation) {
+      handleImageUploadReset();
+      return;
+    }
+    setDisable(true);
+    const uploadedFile = e.target.files[0];
+    setFile(uploadedFile);
+    const fileContent = await new Promise((resolve, _) => {
+      const reader = new FileReader();
+      reader.onloadend = () => resolve(reader.result as string);
+      reader.readAsDataURL(uploadedFile);
+    });
+    const chats = chatHistory;
+    let id = 1;
+    chats.forEach((c) => {
+      if (c.id && c.id >= id) id = c.id + 1;
+    });
+    let chat = {
+      id,
+      conversation_id: currentConversation,
+      role: "upload",
+      content: fileContent as string,
+      name: undefined,
+      created_at: new Date().toISOString(),
+    };
+    chats.push(chat);
+    setChatHistory(chats);
+    ChatAPI.saveChat(currentConversation, chat);
+    const tags = await getTags(fileContent as string);
+    chat = {
+      id: id + 1,
+      conversation_id: currentConversation,
+      role: "info",
+      content: JSON.stringify(tags),
+      name: undefined,
+      created_at: new Date().toISOString(),
+    };
+    chats.push(chat);
+    setChatHistory(chats);
+    await ChatAPI.saveChat(currentConversation, chat);
+    handleImageUploadReset();
+    setDisable(false);
+  };
+
+  const handleDragOver: DragEventHandler<HTMLDivElement> = (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+  };
+
+  const handleDrop: DragEventHandler<HTMLDivElement> = (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    const droppedFile = e.dataTransfer.files[0];
+    setFile(droppedFile);
+  };
+
+  const handleImageUploadClick: MouseEventHandler<HTMLButtonElement> = (e) => {
+    if (fileInputRef && fileInputRef.current) {
+      fileInputRef.current.click();
+    }
+  };
+
+  const handleImageUploadReset = () => {
+    if (fileInputRef && fileInputRef.current) {
+      fileInputRef.current.value = "";
+    }
+    setFile(new Blob());
+  };
+
+  const handleTagSelectedChange = (tags: string[]) => {
+    setMessage(`Draw with prompt: ${tags.join(",")}`);
+  };
+
   return (
-    <div className="flex w-full h-full">
+    <div className="flex w-full h-full max-w-[100%]">
       {/* left */}
       <div className="hidden max-w-[300px] bg-gray-900 text-white p-2 md:grid grid-rows-[45px_1fr_100px] select-none">
         <div
@@ -442,10 +553,10 @@ export const ChatRoom = ({
       </div>
 
       {/* right */}
-      <div className="relative flex flex-col items-center justify-start gap-16 h-full py-4 flex-1">
-        {chatHistory.length === 0 && (
+      <div className="relative flex flex-col items-center justify-start gap-16 h-full py-4 flex-1 max-w-[100%]">
+        {/* {chatHistory.length === 0 && (
           <Image className="mt-8" src={content} alt="background image"></Image>
-        )}
+        )} */}
 
         {/* chats */}
         <ChatsWrapper
@@ -454,7 +565,7 @@ export const ChatRoom = ({
         >
           {chatHistory.map((chat, index) => {
             return (
-              <div key={index} className="flex flex-col gap-14 ">
+              <div key={index} className="flex flex-col gap-14 w-full">
                 {chat && chat.role == "user" && (
                   <div className="self-end flex">
                     {/* chat bubble badge */}
@@ -477,10 +588,37 @@ export const ChatRoom = ({
                   chat.content.indexOf("data:image") != -1 && (
                     <div className="self-start flex">
                       <div className="rounded-md bg-orange-400 text-white text-xl px-4 py-2 max-w-xl">
-                        <img src={chat.content} alt="image" />
+                        <img className="" src={chat.content} alt="image" />
                       </div>
                     </div>
                   )}
+                {chat &&
+                chat.role == "upload" &&
+                chat.content.indexOf("data:image") != -1 ? (
+                  <div className="self-end flex">
+                    <div className="rounded-md bg-green-400 text-white text-xl px-4 py-2 max-w-xl">
+                      <img className="" src={chat.content} alt="image" />
+                    </div>
+                  </div>
+                ) : (
+                  <></>
+                )}
+                {chat &&
+                chat.role == "info" &&
+                chat.content.indexOf("confidence") != -1 ? (
+                  <div className="self-start flex">
+                    <div className="rounded-md bg-emerald-700 text-white text-xl px-4 py-2 max-w-xl">
+                      <DeepDanbooru
+                        dict={dict}
+                        tags={JSON.parse(chat.content)}
+                        handleTagSelectedChange={handleTagSelectedChange}
+                        clearSelectedFlag={clearTagSelected}
+                      />
+                    </div>
+                  </div>
+                ) : (
+                  <></>
+                )}
               </div>
             );
           })}
@@ -493,7 +631,7 @@ export const ChatRoom = ({
             value={message}
             onChange={(ev) => setMessage(ev.target.value)}
             onKeyDown={onEnterForSendMessage}
-            className="w-full pr-10 md:w-11/12 border-0 md:pr-0 focus:ring-0"
+            className="w-full pr-10 md:w-9/12 border-0 md:pr-0 focus:ring-0"
           />
           {disable ? (
             <BeatLoader
@@ -502,11 +640,26 @@ export const ChatRoom = ({
               color="black"
             />
           ) : (
-            <ChatSendButton
-              className="w-10 h-full"
-              disabled={disable}
-              onClick={() => sendMessage}
-            />
+            <ButtonWrapper className="flex">
+              <UploadFileButton
+                className="w-10 h-full"
+                disabled={disable}
+                onClick={handleImageUploadClick}
+              />
+              <ChatSendButton
+                className="w-10 h-full"
+                disabled={disable}
+                onClick={() => sendMessage()}
+              />
+              <input
+                disabled={disable}
+                ref={fileInputRef}
+                type="file"
+                onChange={handleImageFileUpload}
+                style={{ display: "none" }}
+                accept="image/*"
+              />
+            </ButtonWrapper>
           )}
         </ChatInputWrapper>
       </div>

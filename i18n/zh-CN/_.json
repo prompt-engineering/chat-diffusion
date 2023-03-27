@@ -10,5 +10,6 @@
   "copy_paste": "输入",
   "go": "开始",
   "enter_openai_api_key": "请输入 OpenAI API key",
-  "enter_huggingface_access_token": "请输入 Hugging Face Access Token"
+  "enter_huggingface_access_token": "请输入 Hugging Face Access Token",
+  "select_all": "全选"
 }

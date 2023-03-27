@@ -17,3 +17,5 @@ export const CHAT_COMPLETION_CONFIG = {
 export const HUGGINGFACE_INFERENCE_URL = "https://api-inference.huggingface.co";
 export const HUGGINGFACE_DEFAULT_STABLE_DIFFUSION_MODEL =
   "prompthero/openjourney";
+export const HUGGINGFACE_DEEPDANBOORU_SPACE_URL =
+  "wss://hysts-deepdanbooru.hf.space/queue/join";

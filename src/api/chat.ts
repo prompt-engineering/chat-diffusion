@@ -38,6 +38,37 @@ export async function getChatsByConversationId(
   return data;
 }
 
+export async function saveChat(
+  conversationId: number,
+  message: {
+    role: string;
+    content: string;
+  }
+) {
+  if (isClientSideOpenAI())
+    return EdgeChat.saveChat(conversationId, message) as ResponseGetChats;
+  const response = await nodeFetch("/api/chatgpt/chat", {
+    method: "POST",
+    body: JSON.stringify({
+      action: "save_chat",
+      conversation_id: conversationId,
+      message: message,
+    }),
+  });
+  const data = (await response.json()) as ResponseGetChats;
+  if (!response.ok) {
+    alert("Error: " + JSON.stringify((data as any).error));
+    return null;
+  }
+
+  if (!data) {
+    alert("Error(getChatsByConversationId): sOmeTHiNg wEnT wRoNg");
+    return null;
+  }
+
+  return data;
+}
+
 export async function sendMessage(
   conversationId: number,
   message: string,
