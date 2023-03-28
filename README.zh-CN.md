@@ -16,7 +16,7 @@
 - [x] Hugging Face [Inference API](https://huggingface.co/inference-api) 用于文字生成图像
   - [x] [prompthero/openjourney](https://huggingface.co/prompthero/openjourney) 作为默认的 Stable Diffusion 模型, 你可以让 ChatGPT 把 "model" 换成 Hugging Face 上任意开启了 Inference API 的模型。
 - [ ] Hugging Face Space 集成，用于图像转文字
-  - [ ] [DeepDanbooru](https://huggingface.co/spaces/hysts/DeepDanbooru) (开发中)
+  - [x] [DeepDanbooru](https://huggingface.co/spaces/hysts/DeepDanbooru) (开发中)
 
 ## 本地搭建
 
