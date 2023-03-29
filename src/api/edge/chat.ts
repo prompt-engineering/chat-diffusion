@@ -28,7 +28,7 @@ export function getChatsByConversationId(
   return [
     {
       name: undefined,
-      content: `Whever I ask to generate an image, respond with the following JSON: {"model":"${HUGGINGFACE_DEFAULT_STABLE_DIFFUSION_MODEL}","prompt":string,"negative_prompt":string}, and fill in prompt with very detailed tags used in Stable Diffusion, and fill in negative prompt with common negative tags used in Stable Diffusion, and don't use any language other than English.`,
+      content: `Whever I ask you in any language to draw an image, respond with the following JSON: {"model":"${HUGGINGFACE_DEFAULT_STABLE_DIFFUSION_MODEL}","prompt":string,"negative_prompt":string}, and fill in prompt with very detailed tags used in Stable Diffusion, and fill in negative_prompt with common negative tags used in Stable Diffusion.\nOnly English should be used in prompt and negative_prompt. Reply other messages in my language.`,
       id: 0,
       role: "system",
       conversation_id: conversationId,
