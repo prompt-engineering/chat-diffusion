@@ -449,7 +449,7 @@ export const ChatRoom = ({
   };
 
   const handleTagSelectedChange = (tags: string[]) => {
-    setMessage(`Draw with prompt: ${tags.join(",")}`);
+    setMessage(`${dict["tag_prompt"]}${tags.join(",")}`);
   };
 
   return (
@@ -631,7 +631,7 @@ export const ChatRoom = ({
             value={message}
             onChange={(ev) => setMessage(ev.target.value)}
             onKeyDown={onEnterForSendMessage}
-            className="w-full pr-10 md:w-9/12 border-0 md:pr-0 focus:ring-0"
+            className="pr-10 md:w-9/12 border-0 md:pr-0 focus:ring-0"
           />
           {disable ? (
             <BeatLoader

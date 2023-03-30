@@ -11,5 +11,6 @@
   "go": "开始",
   "enter_openai_api_key": "请输入 OpenAI API key",
   "enter_huggingface_access_token": "请输入 Hugging Face Access Token",
-  "select_all": "全选"
+  "select_all": "全选",
+  "tag_prompt": "替换 prompt 并画图："
 }
